@@ -31,9 +31,12 @@ public class Doctor {
     private String email;
 
     @ManyToMany(mappedBy = "doctors")
+    @ToString.Exclude
     private Set<Department> departments = new HashSet<>();
 
-    @OneToMany(mappedBy = "doctor")
+
+    @OneToMany(mappedBy = "doctor",fetch = FetchType.EAGER)
+    @ToString.Exclude
     private List<Appointment> appointments = new ArrayList<>();
 
 

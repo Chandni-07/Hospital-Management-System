@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -43,11 +44,12 @@ public class Patient {
     @Enumerated(EnumType.STRING)
     private BloodGroupType bloodGroup;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name = "patient_insurance_id") // owning side
     private Insurance insurance;
 
 
-    @OneToMany(mappedBy = "patient") //inverse
-    private List<Appointment> appointments;
+    @OneToMany(mappedBy = "patient",fetch = FetchType.EAGER, cascade=CascadeType.REMOVE,orphanRemoval = true) //inverse
+    @ToString.Exclude
+    private List<Appointment> appointments=new ArrayList<>();
 }
