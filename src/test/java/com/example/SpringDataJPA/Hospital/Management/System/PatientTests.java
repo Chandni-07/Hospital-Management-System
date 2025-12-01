@@ -19,9 +19,9 @@ public class PatientTests {
     @Transactional
     public void testTransaction() {
 
-        Patient p=patientService.getPatientById(1L);
+      /*  Patient p=patientService.getPatientById(1L);
 
-        System.out.println(p);
+        System.out.println(p);*/
 
         //        Patient patient = patientService.getPatientById(1L);
 

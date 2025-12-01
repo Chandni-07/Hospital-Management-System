@@ -1,6 +1,8 @@
 package com.example.SpringDataJPA.Hospital.Management.System.service;
 
 
+import com.example.SpringDataJPA.Hospital.Management.System.dto.AppointmentResponseDto;
+import com.example.SpringDataJPA.Hospital.Management.System.dto.CreateAppointmentRequestDto;
 import com.example.SpringDataJPA.Hospital.Management.System.entities.Appointment;
 import com.example.SpringDataJPA.Hospital.Management.System.entities.Doctor;
 import com.example.SpringDataJPA.Hospital.Management.System.entities.Patient;
@@ -8,8 +10,12 @@ import com.example.SpringDataJPA.Hospital.Management.System.repository.Appointme
 import com.example.SpringDataJPA.Hospital.Management.System.repository.DoctorRepository;
 import com.example.SpringDataJPA.Hospital.Management.System.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,24 +24,31 @@ public class AppointmentService {
 
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
-
+    private final ModelMapper modelMapper;
     private final AppointmentRepository appointmentRepository;
 
-    public Appointment createNewAppointment(Long doctorId, Long patientId, Appointment appointment) {
+
+    @Transactional
+    public AppointmentResponseDto createNewAppointment(CreateAppointmentRequestDto createAppointmentRequestDto) {
+        Long doctorId = createAppointmentRequestDto.getDoctorId();
+        Long patientId = createAppointmentRequestDto.getPatientId();
+
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow();
         Patient patient = patientRepository.findById(patientId).orElseThrow();
 
-        if (appointment.getId() != null) {
-            throw new IllegalArgumentException("Appointment ID must be null for new appointments");
-        }
+        Appointment appointment = Appointment.builder()
+                .reason(createAppointmentRequestDto.getReason())
+                .appointmentTime(createAppointmentRequestDto.getAppointmentTime())
+                .build();
+
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
 
         patient.getAppointments().add(appointment);
         doctor.getAppointments().add(appointment);// bi-directional relationship
 
-
-        return appointmentRepository.save(appointment);
+        appointment = appointmentRepository.save(appointment);
+        return modelMapper.map(appointment, AppointmentResponseDto.class);
     }
 
     @Transactional
@@ -51,6 +64,15 @@ public class AppointmentService {
         return appointment;
 
 
+    }
+
+    public List<AppointmentResponseDto> getAllAppointmentsOfDoctor(Long doctorId) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow();
+
+        return doctor.getAppointments()
+                .stream()
+                .map(appointment -> modelMapper.map(appointment, AppointmentResponseDto.class))
+                .collect(Collectors.toList());
     }
 
 }

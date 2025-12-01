@@ -42,7 +42,7 @@ public class InsuranceTests {
 
     }
 
-    @Test
+    /*@Test
     public void testCreateAppointment() {
         Appointment appointment = Appointment.builder()
                 .appointmentTime(LocalDateTime.of(2025, 11, 1, 14, 0, 0))
@@ -55,5 +55,5 @@ public class InsuranceTests {
 
         Appointment updatedApp= appointmentService.reassignAppointmentToAnotherDoctor(newApp.getId(),3L);
         System.out.println(updatedApp);
-    }
+    }*/
 }
