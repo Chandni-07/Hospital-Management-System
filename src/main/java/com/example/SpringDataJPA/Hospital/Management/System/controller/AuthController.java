@@ -3,6 +3,7 @@ package com.example.SpringDataJPA.Hospital.Management.System.controller;
 
 import com.example.SpringDataJPA.Hospital.Management.System.dto.LoginRequestDto;
 import com.example.SpringDataJPA.Hospital.Management.System.dto.LoginResponseDto;
+import com.example.SpringDataJPA.Hospital.Management.System.dto.SignUpRequestDto;
 import com.example.SpringDataJPA.Hospital.Management.System.dto.SignupResponseDto;
 import com.example.SpringDataJPA.Hospital.Management.System.security.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponseDto> signup(LoginRequestDto signupRequestDto) {
+    public ResponseEntity<SignupResponseDto> signup(SignUpRequestDto signupRequestDto) {
         return ResponseEntity.ok(authService.signup(signupRequestDto));
     }
 

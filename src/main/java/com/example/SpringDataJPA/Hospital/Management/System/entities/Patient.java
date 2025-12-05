@@ -2,9 +2,7 @@ package com.example.SpringDataJPA.Hospital.Management.System.entities;
 
 import com.example.SpringDataJPA.Hospital.Management.System.entities.type.BloodGroupType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -16,6 +14,10 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+
 @Table (
         uniqueConstraints = {
              //   @UniqueConstraint(name = "unique_email", columnNames = {"email"}),
@@ -27,6 +29,10 @@ public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
+
+    @OneToOne
+    @MapsId   //shared primary key with User entity so that Patient id is same as User id , now id of Patient is also primary key as well as foreign key
+    private User user;
 
     private String name;
 
